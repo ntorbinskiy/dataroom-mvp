@@ -3,3 +3,4 @@ dist/
 docs/
 *.local
 .DS_Store
+.claude/
