@@ -14,7 +14,7 @@ import {
 } from '@/hooks/use-nodes'
 import { NameConflictError } from '@/core/repository'
 import { describeRejection, partitionUploadFiles } from '@/core/upload'
-import { formatBytes } from '@/core/format'
+import { formatBytes, formatCount } from '@/core/format'
 import { isFileNode, isFolderNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'
 import { buildCrumbs } from './crumbs'
@@ -80,7 +80,7 @@ export function useFolderViewModel(): FolderViewModel {
     const counts = deleteCounts.data
     if (counts === undefined) return 'Counting contents…'
     if (counts.folders === 0 && counts.files === 0) return 'This folder is empty.'
-    return `This will permanently delete ${counts.folders} folders and ${counts.files} files.`
+    return `This will permanently delete ${formatCount(counts.folders, 'folder')} and ${formatCount(counts.files, 'file')}.`
   }
 
   return {
@@ -92,7 +92,7 @@ export function useFolderViewModel(): FolderViewModel {
         : null,
     summary:
       children.data !== undefined
-        ? `${folderChildren.length} folders · ${fileChildren.length} files · ${formatBytes(directSize)}`
+        ? `${formatCount(folderChildren.length, 'folder')} · ${formatCount(fileChildren.length, 'file')} · ${formatBytes(directSize)}`
         : null,
     nodes: children.data,
     childCounts: childCounts.data ?? new Map(),

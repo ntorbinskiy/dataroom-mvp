@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { NodeIcon } from '@/components/nodes/NodeIcon'
-import { formatBytes, formatDate } from '@/core/format'
+import { formatBytes, formatCount, formatDate } from '@/core/format'
 import { isFileNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'
 
@@ -38,19 +38,28 @@ export function NodeTable({ nodes, childCounts, onOpen, onRename, onDelete }: No
           {nodes.map((node) => (
             <tr
               key={node.id}
+              tabIndex={0}
               onClick={() => onOpen(node)}
-              className="cursor-pointer border-b transition-colors last:border-b-0 hover:bg-secondary/45"
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  onOpen(node)
+                }
+              }}
+              className="cursor-pointer border-b transition-colors last:border-b-0 hover:bg-secondary/45 focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2"
             >
               <td className="px-4 py-0">
                 <div className="flex h-12 items-center gap-3 font-medium">
                   <NodeIcon node={node} />
-                  <span className="truncate">{node.name}</span>
+                  <span className="truncate" title={node.name}>
+                    {node.name}
+                  </span>
                 </div>
               </td>
               <td className="px-4 font-mono text-xs text-muted-foreground">
                 {isFileNode(node)
                   ? formatBytes(node.size)
-                  : `${childCounts.get(node.id) ?? 0} items`}
+                  : formatCount(childCounts.get(node.id) ?? 0, 'item')}
               </td>
               <td className="hidden px-4 font-mono text-xs text-muted-foreground sm:table-cell">
                 {formatDate(node.updatedAt)}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useDeleteNode, useFileBlob, useNode, useRenameNode } from '@/hooks/use-nodes'
@@ -18,16 +18,20 @@ export function useFileViewerViewModel(): FileViewerViewModel {
     node.data !== undefined && node.data !== null && isFileNode(node.data) ? node.data : null
   const blob = useFileBlob(file?.blobKey ?? '')
 
-  const objectUrl = useMemo(() => {
-    if (blob.data === undefined || blob.data === null) return null
-    return URL.createObjectURL(blob.data)
-  }, [blob.data])
+  const [objectUrl, setObjectUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    return () => {
-      if (objectUrl !== null) URL.revokeObjectURL(objectUrl)
+    if (blob.data === undefined || blob.data === null) {
+      setObjectUrl(null)
+      return
     }
-  }, [objectUrl])
+    const url = URL.createObjectURL(blob.data)
+    setObjectUrl(url)
+    return () => {
+      URL.revokeObjectURL(url)
+      setObjectUrl(null)
+    }
+  }, [blob.data])
 
   const [renameOpen, setRenameOpen] = useState(false)
   const [renameConflict, setRenameConflict] = useState(false)

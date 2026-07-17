@@ -9,7 +9,7 @@ import {
   useRenameDataroom,
 } from '@/hooks/use-datarooms'
 import { NameConflictError } from '@/core/repository'
-import { formatBytes, formatDate } from '@/core/format'
+import { formatBytes, formatCount, formatDate } from '@/core/format'
 import type { Dataroom } from '@/core/types'
 import type { HomeViewModel } from './home-contract'
 
@@ -52,9 +52,9 @@ export function useHomeViewModel(): HomeViewModel {
 
   function describeDelete(): string {
     const counts = deleteContents.data
-    if (counts === undefined) return 'Counting contents...'
+    if (counts === undefined) return 'Counting contents…'
     if (counts.folders === 0 && counts.files === 0) return 'This data room is empty.'
-    return `This will permanently delete ${counts.folders} folders and ${counts.files} files.`
+    return `This will permanently delete ${formatCount(counts.folders, 'folder')} and ${formatCount(counts.files, 'file')}.`
   }
 
   return {

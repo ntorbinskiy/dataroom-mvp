@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { formatCount } from '@/core/format'
 import type { Dataroom } from '@/core/types'
 import type { HomeViewModel } from '@/viewmodels/home-contract'
 
@@ -66,7 +67,7 @@ export function HomeView({ vm }: { vm: HomeViewModel }) {
       <main className="mx-auto max-w-5xl px-6 py-6">
         <h1 className="font-display text-2xl font-semibold">Data rooms</h1>
         <p className="mt-1 font-mono text-xs text-muted-foreground">
-          {vm.rooms !== undefined ? `${vm.rooms.length} rooms` : 'Loading...'}
+          {vm.rooms !== undefined ? formatCount(vm.rooms.length, 'room') : 'Loading…'}
         </p>
         <div className="mt-5">
           {vm.isLoading ? <TableSkeleton rows={3} /> : null}
@@ -87,7 +88,7 @@ export function HomeView({ vm }: { vm: HomeViewModel }) {
                 <RoomCard
                   key={room.id}
                   room={room}
-                  meta={vm.roomMeta.get(room.id) ?? '...'}
+                  meta={vm.roomMeta.get(room.id) ?? '…'}
                   onRename={() => vm.rename.show(room)}
                   onDelete={() => vm.remove.show(room)}
                 />
