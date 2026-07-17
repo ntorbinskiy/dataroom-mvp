@@ -41,6 +41,7 @@ export function NodeTable({ nodes, childCounts, onOpen, onRename, onDelete }: No
               tabIndex={0}
               onClick={() => onOpen(node)}
               onKeyDown={(event) => {
+                if (event.target !== event.currentTarget) return
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault()
                   onOpen(node)

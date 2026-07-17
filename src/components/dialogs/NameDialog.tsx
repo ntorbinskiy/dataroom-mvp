@@ -45,7 +45,6 @@ export function NameDialog({
       setValue(base)
       setLocalError(null)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialName])
 
   const error = localError ?? (conflictError ? 'Name already taken' : null)

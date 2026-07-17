@@ -25,7 +25,11 @@ export function usePath(id: NodeId | null) {
 
 export function useFileBlob(blobKey: string) {
   const repository = useRepository()
-  return useQuery({ queryKey: ['blob', blobKey], queryFn: () => repository.getFileBlob(blobKey) })
+  return useQuery({
+    queryKey: ['blob', blobKey],
+    queryFn: () => repository.getFileBlob(blobKey),
+    enabled: blobKey !== '',
+  })
 }
 
 function useInvalidateNodes() {

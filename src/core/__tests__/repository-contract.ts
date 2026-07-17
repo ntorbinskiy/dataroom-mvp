@@ -132,6 +132,7 @@ export function describeRepositoryContract(
         const blob = await repo.getFileBlob(node.blobKey)
         expect(blob).not.toBeNull()
         expect(await blob?.text()).toBe('hello')
+        expect(blob?.type).toBe('application/pdf')
       })
 
       it('auto-suffixes duplicates within the batch and against existing siblings', async () => {

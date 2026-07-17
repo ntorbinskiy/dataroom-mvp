@@ -190,7 +190,7 @@ export function createIndexedDbRepository(): DataroomRepository {
         const tx = database.transaction(['nodes', 'blobs'], 'readwrite')
         await Promise.all([
           tx.objectStore('nodes').put(node),
-          tx.objectStore('blobs').put(file, node.blobKey),
+          tx.objectStore('blobs').put(new Blob([file], { type: 'application/pdf' }), node.blobKey),
         ])
         await tx.done
         created.push(node)

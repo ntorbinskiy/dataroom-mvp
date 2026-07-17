@@ -5,8 +5,9 @@ This project was built pair-programming with Claude Code. Log of where and how A
 - 2026-07-17: requirements analysis + brainstorming (data model, IndexedDB vs
   localStorage, routing, PDF viewer trade-offs); visual direction via an HTML
   mockup; spec and a detailed implementation plan (all code drafted in the plan).
-- 2026-07-17: implementation by fresh AI subagents, one per task (15 tasks),
-  each followed by an independent AI code-review pass. A human steered the
+- 2026-07-17: implementation by fresh AI subagents, one per task (14 of 15
+  tasks logged so far; Task 15, deploy, is pending and will be logged when it
+  runs), each followed by an independent AI code-review pass. A human steered the
   architecture decisions (hexagonal port + shared contract test suite over both
   adapters, MVVM with per-page view-model contracts and pure views) and approved
   each stage before the next task started.
@@ -27,7 +28,7 @@ This project was built pair-programming with Claude Code. Log of where and how A
 - All commits were authored via the project's own commit workflow; no AI
   attribution appears in any commit message.
 
-## Per-task log (Tasks 1-13)
+## Per-task log (Tasks 1-14)
 
 - Task 1 - Scaffold, Makefile, git init (59a4923). Vite + React + TypeScript +
   Vitest scaffold, jsdom test environment. Review: clean; minor note (no
@@ -93,3 +94,7 @@ This project was built pair-programming with Claude Code. Log of where and how A
   exact counts, persistence across reload, deep links, keyboard navigation,
   a 375px mobile layout, and NotFound routing - all passed. One finding was
   fixed inline during verification (missing favicon, commit 5861602).
+- Task 14 - README, AI usage log, vercel.json, .claude gitignore (68a150f).
+  Wrote the project README (design decisions, setup instructions), kept this
+  AI_USAGE.md log current, added `vercel.json` for deployment, and gitignored
+  the local `.claude` directory. Review: clean.

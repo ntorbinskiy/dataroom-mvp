@@ -32,7 +32,7 @@ export function useHomeViewModel(): HomeViewModel {
       const entries = await Promise.all(
         (rooms.data ?? []).map(async (room): Promise<[string, string]> => {
           const stats = await repository.getDataroomStats(room.id)
-          const line = `${stats.fileCount} files · ${formatBytes(stats.totalSize)} · ${formatDate(room.updatedAt)}`
+          const line = `${formatCount(stats.fileCount, 'file')} · ${formatBytes(stats.totalSize)} · ${formatDate(room.updatedAt)}`
           return [room.id, line]
         }),
       )

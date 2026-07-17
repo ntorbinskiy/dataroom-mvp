@@ -161,7 +161,7 @@ export function createMemoryRepository(): DataroomRepository {
           updatedAt: timestamp,
         }
         nodes.set(node.id, node)
-        blobs.set(node.blobKey, file)
+        blobs.set(node.blobKey, new Blob([file], { type: 'application/pdf' }))
         created.push(node)
       }
       touch(dataroomId)
