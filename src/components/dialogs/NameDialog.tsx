@@ -50,7 +50,7 @@ export function NameDialog({
 
   const error = localError ?? (conflictError ? 'Name already taken' : null)
 
-  function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     const validation = validateName(value)
     if (!validation.ok) {
