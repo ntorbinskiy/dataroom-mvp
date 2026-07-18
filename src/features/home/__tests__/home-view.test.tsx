@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithProviders } from '@/test/utils'
-import { HomeView } from '@/components/views/HomeView'
-import type { HomeViewModel } from '@/viewmodels/home-contract'
+import { HomeView } from '@/features/home/HomeView'
+import type { HomeViewModel } from '@/features/home/home.port'
 import type { Dataroom } from '@/core/types'
 
 function stubVm(overrides: Partial<HomeViewModel> = {}): HomeViewModel {

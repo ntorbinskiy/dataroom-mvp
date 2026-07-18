@@ -1,5 +1,5 @@
 import type { Dataroom } from '@/core/types'
-import type { DialogFlow, RemoveFlow, TargetDialogFlow } from './flows'
+import type { DialogFlow, RemoveFlow, TargetDialogFlow } from '@/features/shared/flows.port'
 
 export interface HomeViewModel {
   rooms: Dataroom[] | undefined

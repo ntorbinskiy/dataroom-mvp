@@ -1,7 +1,7 @@
 import { isNameTaken, resolveUniqueName } from '@/core/naming'
 import { compareSiblings } from '@/core/ordering'
-import { NameConflictError } from '@/core/repository'
-import type { DataroomRepository } from '@/core/repository'
+import { NameConflictError } from '@/core/repository.port'
+import type { DataroomRepository } from '@/core/repository.port'
 import { isFileNode } from '@/core/types'
 import type { Dataroom, DataroomNode, FileNode, FolderNode, NodeId } from '@/core/types'
 

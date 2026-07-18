@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { DataroomRepository } from '@/core/repository'
+import type { DataroomRepository } from '@/core/repository.port'
 
 const RepositoryContext = createContext<DataroomRepository | null>(null)
 

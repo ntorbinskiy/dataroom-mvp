@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { NameConflictError } from '@/core/repository'
-import type { DataroomRepository } from '@/core/repository'
+import { NameConflictError } from '@/core/repository.port'
+import type { DataroomRepository } from '@/core/repository.port'
 import { isFileNode } from '@/core/types'
 
 function pdf(name: string, content = 'x'): File {

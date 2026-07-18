@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { NodeIcon } from '@/components/nodes/NodeIcon'
+import { NodeIcon } from '@/features/folder/NodeIcon'
 import { formatBytes, formatCount, formatDate } from '@/core/format'
 import { isFileNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'

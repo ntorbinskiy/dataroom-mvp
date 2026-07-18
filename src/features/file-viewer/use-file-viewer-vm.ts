@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useDeleteNode, useFileBlob, useNode, useRenameNode } from '@/hooks/use-nodes'
-import { NameConflictError } from '@/core/repository'
+import { NameConflictError } from '@/core/repository.port'
 import { formatBytes } from '@/core/format'
 import { isFileNode } from '@/core/types'
-import type { FileViewerViewModel } from './file-viewer-contract'
+import type { FileViewerViewModel } from '@/features/file-viewer/file-viewer.port'
 
 export function useFileViewerViewModel(): FileViewerViewModel {
   const params = useParams()

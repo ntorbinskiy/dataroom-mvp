@@ -1,16 +1,16 @@
 import { FolderPlus } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs'
-import { NodeTable } from '@/components/nodes/NodeTable'
-import { UploadButton } from '@/components/upload/UploadButton'
-import { DropzoneOverlay } from '@/components/upload/DropzoneOverlay'
+import { Breadcrumbs } from '@/features/folder/Breadcrumbs'
+import { NodeTable } from '@/features/folder/NodeTable'
+import { UploadButton } from '@/features/folder/UploadButton'
+import { DropzoneOverlay } from '@/features/folder/DropzoneOverlay'
 import { NameDialog } from '@/components/dialogs/NameDialog'
 import { DeleteConfirmDialog } from '@/components/dialogs/DeleteConfirmDialog'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { TableSkeleton } from '@/components/feedback/TableSkeleton'
 import { Button } from '@/components/ui/button'
-import type { FolderViewModel } from '@/viewmodels/folder-contract'
+import type { FolderViewModel } from '@/features/folder/folder.port'
 
 export function FolderView({ vm }: { vm: FolderViewModel }) {
   return (

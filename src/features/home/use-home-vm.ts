@@ -8,10 +8,10 @@ import {
   useDeleteDataroom,
   useRenameDataroom,
 } from '@/hooks/use-datarooms'
-import { NameConflictError } from '@/core/repository'
+import { NameConflictError } from '@/core/repository.port'
 import { formatBytes, formatCount, formatDate } from '@/core/format'
 import type { Dataroom } from '@/core/types'
-import type { HomeViewModel } from './home-contract'
+import type { HomeViewModel } from '@/features/home/home.port'
 
 export function useHomeViewModel(): HomeViewModel {
   const repository = useRepository()

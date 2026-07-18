@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/test/utils'
-import { NodeTable } from '@/components/nodes/NodeTable'
+import { NodeTable } from '@/features/folder/NodeTable'
 import type { DataroomNode } from '@/core/types'
 
 function makeFolderNode(): DataroomNode {

@@ -4,7 +4,7 @@ import { render } from '@testing-library/react'
 import type { RenderResult } from '@testing-library/react'
 import { RepositoryProvider } from '@/app/repository-context'
 import { createMemoryRepository } from '@/data/memory-repository'
-import type { DataroomRepository } from '@/core/repository'
+import type { DataroomRepository } from '@/core/repository.port'
 
 interface ProviderRenderOptions {
   initialPath?: string

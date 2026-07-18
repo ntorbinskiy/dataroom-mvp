@@ -12,13 +12,13 @@ import {
   useRenameNode,
   useUploadFiles,
 } from '@/hooks/use-nodes'
-import { NameConflictError } from '@/core/repository'
+import { NameConflictError } from '@/core/repository.port'
 import { describeRejection, partitionUploadFiles } from '@/core/upload'
 import { formatBytes, formatCount } from '@/core/format'
 import { isFileNode, isFolderNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'
-import { buildCrumbs } from './crumbs'
-import type { FolderViewModel } from './folder-contract'
+import { buildCrumbs } from '@/features/folder/crumbs'
+import type { FolderViewModel } from '@/features/folder/folder.port'
 
 export function useFolderViewModel(): FolderViewModel {
   const params = useParams()

@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { collapseCrumbs } from '@/viewmodels/crumbs'
-import type { Crumb } from '@/viewmodels/crumbs'
+import { collapseCrumbs } from '@/features/folder/crumbs'
+import type { Crumb } from '@/features/folder/crumbs'
 
 export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
   const visible = collapseCrumbs(crumbs)

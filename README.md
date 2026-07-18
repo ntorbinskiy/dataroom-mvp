@@ -25,13 +25,19 @@ Requires Node.js 20+.
   listings never deserialize file contents.
 - **IndexedDB over localStorage.** PDFs routinely exceed the ~5 MB localStorage cap.
 - **Hexagonal core behind a contract.** All persistence sits behind
-  `DataroomRepository` (src/core/repository.ts). Two adapters implement it -
+  `DataroomRepository` (src/core/repository.port.ts). Two adapters implement it -
   IndexedDB (production) and in-memory (tests) - and both pass the SAME contract
   test suite, so swapping in a real REST backend means writing one adapter and
   running one suite. The UI never imports an adapter; it gets the port via DI.
 - **MVVM on the view side.** Each page has an explicit ViewModel contract
-  (`viewmodels/*-contract.ts`); pure views render from the contract only and are
+  (`features/*/[name].port.ts`); pure views render from the contract only and are
   tested with stub view-models. Pages are 3-line containers binding the two.
+- **Feature folders.** Each page's port (contract), view-model hook, pure view
+  and container live together in one `src/features/<name>/` directory instead of
+  being scattered across layer folders. The `.port.ts` suffix marks a
+  substitution boundary (a hexagonal port: swap the implementation behind it
+  without touching callers), so contracts are easy to spot at a glance. Shared
+  UI primitives that no single feature owns stay in `src/components/`.
 - **TanStack Query over hand-rolled state.** Loading/error/invalidation for every
   async op with minimal custom code, mirroring how the app would talk to a server.
 - **Native iframe PDF viewer.** The browser's built-in viewer (zoom, search,

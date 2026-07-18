@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { formatCount } from '@/core/format'
 import type { Dataroom } from '@/core/types'
-import type { HomeViewModel } from '@/viewmodels/home-contract'
+import type { HomeViewModel } from '@/features/home/home.port'
 
 function RoomCard({
   room,

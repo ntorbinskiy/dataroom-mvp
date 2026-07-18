@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { buildCrumbs, collapseCrumbs } from '@/viewmodels/crumbs'
-import type { Crumb } from '@/viewmodels/crumbs'
+import { buildCrumbs, collapseCrumbs } from '@/features/folder/crumbs'
+import type { Crumb } from '@/features/folder/crumbs'
 import type { FolderNode } from '@/core/types'
 
 function folder(id: string, name: string, parentId: string | null): FolderNode {

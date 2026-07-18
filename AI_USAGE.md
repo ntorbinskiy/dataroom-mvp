@@ -98,3 +98,13 @@ This project was built pair-programming with Claude Code. Log of where and how A
   Wrote the project README (design decisions, setup instructions), kept this
   AI_USAGE.md log current, added `vercel.json` for deployment, and gitignored
   the local `.claude` directory. Review: clean.
+- 2026-07-18 - Feature-folder refactor + `.port.ts` naming convention. A code
+  discussion (colocation argument: a page's contract, view-model hook, view
+  and container are easier to navigate together than spread across layer
+  folders) drove the decision to move from `viewmodels/`, `components/views/`,
+  `components/nodes/`, `components/upload/` and `pages/` into per-feature
+  `src/features/<name>/` directories, and to rename contract files to
+  `.port.ts` to mark hexagonal substitution boundaries at a glance. Mechanical
+  move with `git mv` to preserve history, plus import rewiring; no exports,
+  hooks, components, or behavior were renamed or changed. All 64 tests across
+  11 files still pass, typecheck and build are clean.

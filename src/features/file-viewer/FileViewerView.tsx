@@ -5,7 +5,7 @@ import { DeleteConfirmDialog } from '@/components/dialogs/DeleteConfirmDialog'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { FileViewerViewModel } from '@/viewmodels/file-viewer-contract'
+import type { FileViewerViewModel } from '@/features/file-viewer/file-viewer.port'
 
 export function FileViewerView({ vm }: { vm: FileViewerViewModel }) {
   return (
