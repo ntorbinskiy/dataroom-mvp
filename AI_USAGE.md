@@ -12,9 +12,9 @@ This project was built pair-programming with Claude Code. Log of where and how A
   adapters, MVVM with per-page view-model contracts and pure views) and approved
   each stage before the next task started.
 - Tests: TDD for the core modules and the repository contract suite. Final count:
-  62 tests across 10 files - unit tests (naming, formatting, upload validation),
+  64 tests across 11 files - unit tests (naming, formatting, upload validation),
   the shared contract suite run against both adapters (memory + IndexedDB), and
-  component/view tests (dialogs, home view).
+  component/view tests (dialogs, home view, node table keyboard behavior).
 - End-to-end verification: browser automation (Playwright) driving every flow in
   the spec (room/folder CRUD, PDF upload/view/rename/delete, duplicate-name
   suffixing, recursive delete, persistence across reload, deep links, keyboard
