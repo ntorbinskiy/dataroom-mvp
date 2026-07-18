@@ -41,13 +41,8 @@ export function FolderView({ vm }: { vm: FolderViewModel }) {
           {vm.nodes !== undefined && vm.nodes.length === 0 ? (
             <EmptyState
               stamp="No documents filed"
-              description="Create a folder to organize this section, or upload the first PDF."
-            >
-              <Button variant="outline" onClick={() => vm.createFolder.setOpen(true)}>
-                New folder
-              </Button>
-              <UploadButton pending={vm.uploadPending} onFiles={vm.upload} />
-            </EmptyState>
+              description="Drop PDF files anywhere on this page, or use New folder and Upload PDF above."
+            />
           ) : null}
           {vm.nodes !== undefined && vm.nodes.length > 0 ? (
             <NodeTable

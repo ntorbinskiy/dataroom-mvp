@@ -59,11 +59,7 @@ function RoomCard({
 export function HomeView({ vm }: { vm: HomeViewModel }) {
   return (
     <div className="min-h-dvh">
-      <TopBar>
-        <Button onClick={() => vm.create.setOpen(true)}>
-          <Plus className="h-4 w-4" /> New data room
-        </Button>
-      </TopBar>
+      <TopBar />
       <main className="mx-auto max-w-5xl px-6 py-6">
         <h1 className="font-display text-2xl font-semibold">Data rooms</h1>
         <p className="mt-1 font-mono text-xs text-muted-foreground">
