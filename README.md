@@ -1,8 +1,9 @@
 # Docket · Data Room MVP
 
 Google Drive-style data room for due diligence documents: multiple data rooms,
-nested folders, PDF upload/preview/rename/delete. Everything runs in the browser;
-documents persist in IndexedDB.
+nested folders, PDF upload/preview/rename/delete. Two storage modes: cloud mode
+persists to Supabase Postgres with private blob storage behind sign-in, local
+mode persists to IndexedDB in the browser with zero setup.
 
 Live: https://dataroom-mvp-three.vercel.app
 
@@ -16,6 +17,24 @@ Requires Node.js 20+.
     make typecheck   # tsc --noEmit
     make build       # production build
 
+By default the app runs in local mode: no account, everything stays in this
+browser's IndexedDB.
+
+### Cloud mode setup
+
+1. Create a Supabase project.
+2. Open the SQL editor and run `supabase/schema.sql`.
+3. Under Authentication -> Sign In / Providers -> Email, disable email
+   confirmation (contract tests and quick manual signup rely on sessions
+   being issued immediately).
+4. Copy `.env.example` to `.env.local` and fill in both values from your
+   Supabase project settings:
+
+       cp .env.example .env.local
+
+5. For production, set the same two variables in the Vercel project's
+   environment variables.
+
 ## Design decisions
 
 - **Flat node map, not a tree.** Folders/files live in one IndexedDB store keyed
@@ -25,10 +44,17 @@ Requires Node.js 20+.
   listings never deserialize file contents.
 - **IndexedDB over localStorage.** PDFs routinely exceed the ~5 MB localStorage cap.
 - **Hexagonal core behind a contract.** All persistence sits behind
-  `DataroomRepository` (src/core/repository.port.ts). Two adapters implement it -
-  IndexedDB (production) and in-memory (tests) - and both pass the SAME contract
-  test suite, so swapping in a real REST backend means writing one adapter and
-  running one suite. The UI never imports an adapter; it gets the port via DI.
+  `DataroomRepository` (src/core/repository.port.ts). Three adapters implement it -
+  IndexedDB (local mode), Supabase (cloud mode) and in-memory (tests) - and all
+  pass the SAME contract test suite, so swapping in a real REST backend means
+  writing one adapter and running one suite. The UI never imports an adapter;
+  it gets the port via DI.
+- **Supabase adapter is user-agnostic by construction.** Row-level security
+  plus an `owner_id default auth.uid()` column on every table mean the adapter
+  never has to know or filter by the current user; Postgres does that
+  isolation for it. Auth itself lives in the app shell (`src/app/auth-context.tsx`),
+  not in the data port, so the same repository contract works identically
+  whether a user is signed in or not.
 - **Feature folders.** Each feature folder holds the page's port (`*.port.ts` -
   the view's props contract), a page hook that computes those props, a pure
   view rendering them, and a thin container. They live together in one
@@ -56,8 +82,9 @@ the whole data room with highlighted matches and result paths.
 
 ## Known limitations
 
-No auth, no content search (file names only), no cross-tab sync, files live
-only in this browser profile.
+Local mode has no accounts and files live only in this browser profile.
+Cloud mode has per-user isolation via RLS. Neither mode has content search
+(file names only) or multi-tab live sync.
 
 ## AI usage
 

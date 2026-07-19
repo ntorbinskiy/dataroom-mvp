@@ -162,3 +162,25 @@ driving the running app.
   `FolderView.tsx` gained a search input that swaps the table for results
   while a query is active. 11 new tests (7 core, 2 component, 2 contract),
   64 to 75 total; typecheck and build stayed green throughout.
+- 2026-07-19 - Supabase backend + email/password auth. Added a third
+  `DataroomRepository` adapter (`src/data/supabase/supabase-repository.ts`)
+  running against Postgres, plus `supabase/schema.sql` defining the tables,
+  row-level security policies and a private `pdfs` storage bucket. Auth lives
+  in the app shell: `src/app/auth-context.tsx` exposes a `LocalAuthProvider`
+  stub for local mode and a `SupabaseAuthProvider` for cloud mode, a
+  `LoginPage` handles sign in/up, and `TopBar` shows the signed-in identity.
+  The adapter is selected by env at composition root, and the same 17-case
+  repository contract suite runs live against Supabase in addition to the
+  IndexedDB and in-memory adapters, gated behind `VITE_SUPABASE_URL` /
+  `VITE_SUPABASE_PUBLISHABLE_KEY` so it's skipped without credentials. Review
+  fixes applied after an AI review pass: `getFileBlob` no longer swallows
+  every storage error as a missing file, only a genuine not-found response
+  resolves to null and anything else throws; the uuid guard that already
+  covered `getDataroom`/`getNode` was extended to `roomNodes`,
+  `deleteDataroom` and `renameDataroom` so a non-uuid id behaves like the
+  other adapters (silently absent) instead of raising a Postgres syntax
+  error; and the auth context now tracks the last-seen user id in a ref and
+  only clears the TanStack Query cache when the signed-in user actually
+  changes, not on every `TOKEN_REFRESHED` or `INITIAL_SESSION` event. Test
+  count: 17 live contract tests (env-gated) plus 3 login tests, 95 total
+  when Supabase keys are present in `.env.local`.
