@@ -45,7 +45,9 @@ export function useFolderPage(): FolderViewProps {
 
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedQuery = useDebouncedValue(searchQuery)
-  const searchActive = debouncedQuery.trim() !== ''
+  // an empty live query deactivates the results view immediately; the debounced
+  // value alone would keep stale results on screen for the debounce window
+  const searchActive = searchQuery.trim() !== '' && debouncedQuery.trim() !== ''
   const roomNodes = useRoomNodes(dataroomId, searchActive)
 
   const searchResults = useMemo<SearchResult[]>(() => {
