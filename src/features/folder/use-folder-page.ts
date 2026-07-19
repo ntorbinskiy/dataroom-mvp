@@ -119,7 +119,7 @@ export function useFolderPage(): FolderViewProps {
         ? buildCrumbs(dataroomId, room.data.name, path.data)
         : null,
     summary: searchActive
-      ? formatCount(searchResults.length, 'match')
+      ? formatCount(searchResults.length, 'result')
       : children.data !== undefined
         ? `${formatCount(folderChildren.length, 'folder')} · ${formatCount(fileChildren.length, 'file')} · ${formatBytes(directSize)}`
         : null,
