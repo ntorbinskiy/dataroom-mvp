@@ -6,6 +6,10 @@ import { Toaster } from '@/components/ui/sonner'
 import { RepositoryProvider } from '@/app/repository-context'
 import { createIndexedDbRepository } from '@/data/indexeddb/indexeddb-repository'
 import { openDataroomDb } from '@/data/indexeddb/db'
+import { readSupabaseEnv, createSupabaseBrowserClient } from '@/data/supabase/client'
+import { createSupabaseRepository } from '@/data/supabase/supabase-repository'
+import { AuthGate, LocalAuthProvider, SupabaseAuthProvider } from '@/app/auth-context'
+import { LoginPage } from '@/features/auth/LoginPage'
 import App from './App'
 import '@fontsource/source-serif-4/400.css'
 import '@fontsource/source-serif-4/600.css'
@@ -16,10 +20,17 @@ import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
 import './index.css'
 
-const repository = createIndexedDbRepository()
+const supabaseEnv = readSupabaseEnv()
+const supabaseClient = supabaseEnv === null ? null : createSupabaseBrowserClient(supabaseEnv)
+const repository =
+  supabaseClient === null ? createIndexedDbRepository() : createSupabaseRepository(supabaseClient)
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 5_000 } },
 })
+
+function clearQueryCache(): void {
+  queryClient.clear()
+}
 
 type DbStatus = 'checking' | 'ready' | 'unavailable'
 
@@ -62,9 +73,19 @@ createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <RepositoryProvider repository={repository}>
         <BrowserRouter>
-          <DbGate>
-            <App />
-          </DbGate>
+          {supabaseClient === null ? (
+            <LocalAuthProvider>
+              <DbGate>
+                <App />
+              </DbGate>
+            </LocalAuthProvider>
+          ) : (
+            <SupabaseAuthProvider client={supabaseClient} onUserChange={clearQueryCache}>
+              <AuthGate fallback={<LoginPage />}>
+                <App />
+              </AuthGate>
+            </SupabaseAuthProvider>
+          )}
           <Toaster position="bottom-right" />
         </BrowserRouter>
       </RepositoryProvider>

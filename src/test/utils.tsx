@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { render } from '@testing-library/react'
 import type { RenderResult } from '@testing-library/react'
 import { RepositoryProvider } from '@/app/repository-context'
+import { LocalAuthProvider } from '@/app/auth-context'
 import { createMemoryRepository } from '@/data/memory-repository'
 import type { DataroomRepository } from '@/core/repository.port'
 
@@ -19,7 +20,9 @@ export function renderWithProviders(
   const result = render(
     <QueryClientProvider client={queryClient}>
       <RepositoryProvider repository={repository}>
-        <MemoryRouter initialEntries={[initialPath]}>{ui}</MemoryRouter>
+        <LocalAuthProvider>
+          <MemoryRouter initialEntries={[initialPath]}>{ui}</MemoryRouter>
+        </LocalAuthProvider>
       </RepositoryProvider>
     </QueryClientProvider>,
   )
