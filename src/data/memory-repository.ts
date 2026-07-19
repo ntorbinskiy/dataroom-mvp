@@ -109,6 +109,10 @@ export function createMemoryRepository(): DataroomRepository {
         .sort(compareSiblings)
     },
 
+    async listAllNodes(dataroomId) {
+      return roomNodes(dataroomId)
+    },
+
     async getNode(id) {
       return nodes.get(id) ?? null
     },

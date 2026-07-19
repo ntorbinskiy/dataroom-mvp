@@ -114,6 +114,15 @@ export function describeRepositoryContract(
         expect((await repo.getPath(c.id)).map((n) => n.name)).toEqual(['A', 'B', 'C'])
         expect((await repo.getPath(a.id)).map((n) => n.name)).toEqual(['A'])
       })
+
+      it('lists every node of the room and none of another room', async () => {
+        const legal = await repo.createFolder(roomId, null, 'Legal')
+        await repo.uploadFiles(roomId, legal.id, [pdf('x.pdf')])
+        const other = await repo.createDataroom('Other room')
+        await repo.createFolder(other.id, null, 'Foreign')
+        const nodes = await repo.listAllNodes(roomId)
+        expect(nodes.map((n) => n.name).sort()).toEqual(['Legal', 'x.pdf'])
+      })
     })
 
     describe('files, rename, recursive delete', () => {

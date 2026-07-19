@@ -134,6 +134,10 @@ export function createIndexedDbRepository(): DataroomRepository {
       return nodes.filter((n) => n.parentId === parentId).sort(compareSiblings)
     },
 
+    async listAllNodes(dataroomId) {
+      return roomNodes(dataroomId)
+    },
+
     async getNode(id) {
       return getNodeOrNull(id)
     },

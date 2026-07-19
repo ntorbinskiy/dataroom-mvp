@@ -27,6 +27,7 @@ export interface DataroomRepository {
   countDataroomContents(id: string): Promise<ContentCounts>
 
   listChildren(dataroomId: string, parentId: NodeId | null): Promise<DataroomNode[]>
+  listAllNodes(dataroomId: string): Promise<DataroomNode[]>
   getNode(id: NodeId): Promise<DataroomNode | null>
   getPath(id: NodeId): Promise<DataroomNode[]>
   createFolder(dataroomId: string, parentId: NodeId | null, name: string): Promise<FolderNode>

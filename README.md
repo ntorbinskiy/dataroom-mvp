@@ -51,11 +51,13 @@ Duplicate names (auto-suffix on create/upload, inline error on rename), non-PDF
 and >50 MB uploads rejected with per-file toasts, multi-file upload, recursive
 delete with counted confirmation, locked .pdf extension on rename, breadcrumb
 collapse on deep nesting, IndexedDB-unavailable screen, loading skeletons and
-error states with retry, empty states for rooms/folders.
+error states with retry, empty states for rooms/folders. Name search across
+the whole data room with highlighted matches and result paths.
 
 ## Known limitations
 
-No auth, no search, no cross-tab sync, files live only in this browser profile.
+No auth, no content search (file names only), no cross-tab sync, files live
+only in this browser profile.
 
 ## AI usage
 

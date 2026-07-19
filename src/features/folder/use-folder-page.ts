@@ -1,24 +1,27 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { useRepository } from '@/app/repository-context'
 import { useDataroom } from '@/hooks/use-datarooms'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import {
   useChildren,
   useCreateFolder,
   useDeleteNode,
   usePath,
   useRenameNode,
+  useRoomNodes,
   useUploadFiles,
 } from '@/hooks/use-nodes'
 import { NameConflictError } from '@/core/repository.port'
+import { buildPathMap, countDirectChildren, filterByName, splitMatch } from '@/core/search'
 import { describeRejection, partitionUploadFiles } from '@/core/upload'
 import { formatBytes, formatCount } from '@/core/format'
 import { isFileNode, isFolderNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'
 import { buildCrumbs } from '@/features/folder/crumbs'
-import type { FolderViewProps } from '@/features/folder/folder.port'
+import type { FolderViewProps, SearchResult } from '@/features/folder/folder.port'
 
 export function useFolderPage(): FolderViewProps {
   const params = useParams()
@@ -39,6 +42,26 @@ export function useFolderPage(): FolderViewProps {
   const [renameTarget, setRenameTarget] = useState<DataroomNode | null>(null)
   const [renameConflict, setRenameConflict] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<DataroomNode | null>(null)
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedQuery = useDebouncedValue(searchQuery)
+  const searchActive = debouncedQuery.trim() !== ''
+  const roomNodes = useRoomNodes(dataroomId, searchActive)
+
+  const searchResults = useMemo<SearchResult[]>(() => {
+    if (!searchActive || roomNodes.data === undefined) return []
+    const matched = filterByName(roomNodes.data, debouncedQuery)
+    const paths = buildPathMap(roomNodes.data)
+    const counts = countDirectChildren(roomNodes.data)
+    return matched.map((node) => ({
+      node,
+      path: paths.get(node.id) ?? '',
+      match: splitMatch(node.name, debouncedQuery),
+      meta: isFileNode(node)
+        ? formatBytes(node.size)
+        : formatCount(counts.get(node.id) ?? 0, 'item'),
+    }))
+  }, [searchActive, roomNodes.data, debouncedQuery])
 
   const childCounts = useQuery({
     queryKey: ['children', dataroomId, folderId, 'counts'],
@@ -83,6 +106,11 @@ export function useFolderPage(): FolderViewProps {
     return `This will permanently delete ${formatCount(counts.folders, 'folder')} and ${formatCount(counts.files, 'file')}.`
   }
 
+  function openNode(node: DataroomNode): void {
+    if (node.type === 'folder') void navigate(`/d/${dataroomId}/folder/${node.id}`)
+    else void navigate(`/d/${dataroomId}/file/${node.id}`)
+  }
+
   return {
     notFound,
     title,
@@ -90,8 +118,9 @@ export function useFolderPage(): FolderViewProps {
       room.data !== undefined && room.data !== null && path.data !== undefined
         ? buildCrumbs(dataroomId, room.data.name, path.data)
         : null,
-    summary:
-      children.data !== undefined
+    summary: searchActive
+      ? formatCount(searchResults.length, 'match')
+      : children.data !== undefined
         ? `${formatCount(folderChildren.length, 'folder')} · ${formatCount(fileChildren.length, 'file')} · ${formatBytes(directSize)}`
         : null,
     nodes: children.data,
@@ -102,10 +131,7 @@ export function useFolderPage(): FolderViewProps {
       void children.refetch()
     },
     uploadPending: uploadFiles.isPending,
-    openNode: (node) => {
-      if (node.type === 'folder') void navigate(`/d/${dataroomId}/folder/${node.id}`)
-      else void navigate(`/d/${dataroomId}/file/${node.id}`)
-    },
+    openNode,
     upload: (rawFiles) => {
       const { accepted, rejected } = partitionUploadFiles(rawFiles)
       for (const rejection of rejected) toast.error(describeRejection(rejection))
@@ -183,6 +209,17 @@ export function useFolderPage(): FolderViewProps {
             onError: () => toast.error('Could not delete'),
           },
         )
+      },
+    },
+    search: {
+      query: searchQuery,
+      setQuery: setSearchQuery,
+      active: searchActive,
+      isLoading: searchActive && roomNodes.isPending,
+      results: searchResults,
+      open: (node) => {
+        setSearchQuery('')
+        openNode(node)
       },
     },
   }

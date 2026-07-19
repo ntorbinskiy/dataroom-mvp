@@ -150,3 +150,15 @@ driving the running app.
   (SPA rewrites from vercel.json) was set up by hand through the Vercel
   dashboard. The live URL was then added to the README and the production
   build smoke-tested in a browser.
+- 2026-07-19 - Extra credit: search by name, TDD. Added `listAllNodes` to the
+  `DataroomRepository` port and both adapters, covered by one new contract
+  test run against each. Pure matching logic in `core/search.ts`
+  (`filterByName`, `buildPathMap`, `countDirectChildren`, `splitMatch`), no
+  dependency on React or the port. Page-hook plumbing in `use-folder-page.ts`
+  debounces the query, fetches all room nodes only while a search is active,
+  and derives display-ready `SearchResult`s. `SearchResults.tsx` is a dumb
+  results list (highlighted match, ancestor path, size/item-count) reusing
+  the existing empty-state and node-icon components; the toolbar in
+  `FolderView.tsx` gained a search input that swaps the table for results
+  while a query is active. 11 new tests (7 core, 2 component, 2 contract),
+  64 to 75 total; typecheck and build stayed green throughout.

@@ -10,6 +10,15 @@ export function useChildren(dataroomId: string, parentId: NodeId | null) {
   })
 }
 
+export function useRoomNodes(dataroomId: string, enabled: boolean) {
+  const repository = useRepository()
+  return useQuery({
+    queryKey: ['children', dataroomId, 'all-nodes'],
+    queryFn: () => repository.listAllNodes(dataroomId),
+    enabled,
+  })
+}
+
 export function useNode(id: NodeId) {
   const repository = useRepository()
   return useQuery({ queryKey: ['node', id], queryFn: () => repository.getNode(id) })
