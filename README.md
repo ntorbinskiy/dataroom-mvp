@@ -29,15 +29,15 @@ Requires Node.js 20+.
   IndexedDB (production) and in-memory (tests) - and both pass the SAME contract
   test suite, so swapping in a real REST backend means writing one adapter and
   running one suite. The UI never imports an adapter; it gets the port via DI.
-- **MVVM on the view side.** Each page has an explicit ViewModel contract
-  (`features/*/[name].port.ts`); pure views render from the contract only and are
-  tested with stub view-models. Pages are 3-line containers binding the two.
-- **Feature folders.** Each page's port (contract), view-model hook, pure view
-  and container live together in one `src/features/<name>/` directory instead of
-  being scattered across layer folders. The `.port.ts` suffix marks a
-  substitution boundary (a hexagonal port: swap the implementation behind it
-  without touching callers), so contracts are easy to spot at a glance. Shared
-  UI primitives that no single feature owns stay in `src/components/`.
+- **Feature folders.** Each feature folder holds the page's port (`*.port.ts` -
+  the view's props contract), a page hook that computes those props, a pure
+  view rendering them, and a thin container. They live together in one
+  `src/features/<name>/` directory instead of being scattered across layer
+  folders. The `.port.ts` suffix marks a substitution boundary (a hexagonal
+  port: swap the implementation behind it without touching callers), so
+  contracts are easy to spot at a glance. Pure views are tested with stub
+  props. Shared UI primitives that no single feature owns stay in
+  `src/components/`.
 - **TanStack Query over hand-rolled state.** Loading/error/invalidation for every
   async op with minimal custom code, mirroring how the app would talk to a server.
 - **Native iframe PDF viewer.** The browser's built-in viewer (zoom, search,

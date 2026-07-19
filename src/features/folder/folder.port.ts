@@ -2,7 +2,7 @@ import type { DataroomNode, NodeId } from '@/core/types'
 import type { Crumb } from '@/features/folder/crumbs'
 import type { DialogFlow, RemoveFlow, TargetDialogFlow } from '@/features/shared/flows.port'
 
-export interface FolderViewModel {
+export interface FolderViewProps {
   notFound: boolean
   title: string
   crumbs: Crumb[] | null

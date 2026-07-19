@@ -1,7 +1,7 @@
 import type { Dataroom } from '@/core/types'
 import type { DialogFlow, RemoveFlow, TargetDialogFlow } from '@/features/shared/flows.port'
 
-export interface HomeViewModel {
+export interface HomeViewProps {
   rooms: Dataroom[] | undefined
   /** roomId -> "12 files · 340 MB · Jul 12" (display-ready, view does no math) */
   roomMeta: ReadonlyMap<string, string>

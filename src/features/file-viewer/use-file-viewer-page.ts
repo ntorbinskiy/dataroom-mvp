@@ -5,9 +5,9 @@ import { useDeleteNode, useFileBlob, useNode, useRenameNode } from '@/hooks/use-
 import { NameConflictError } from '@/core/repository.port'
 import { formatBytes } from '@/core/format'
 import { isFileNode } from '@/core/types'
-import type { FileViewerViewModel } from '@/features/file-viewer/file-viewer.port'
+import type { FileViewerViewProps } from '@/features/file-viewer/file-viewer.port'
 
-export function useFileViewerViewModel(): FileViewerViewModel {
+export function useFileViewerPage(): FileViewerViewProps {
   const params = useParams()
   const navigate = useNavigate()
   const dataroomId = params.dataroomId ?? ''

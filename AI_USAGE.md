@@ -108,3 +108,10 @@ This project was built pair-programming with Claude Code. Log of where and how A
   move with `git mv` to preserve history, plus import rewiring; no exports,
   hooks, components, or behavior were renamed or changed. All 64 tests across
   11 files still pass, typecheck and build are clean.
+- 2026-07-19 - Vocabulary unification: ViewModel/vm removed in favor of port
+  and props. `HomeViewModel`/`FolderViewModel`/`FileViewerViewModel` renamed to
+  `HomeViewProps`/`FolderViewProps`/`FileViewerViewProps`, the `use-*-vm.ts`
+  hooks renamed to `use-*-page.ts` with matching `use*Page` function names, and
+  views now destructure standard props instead of taking a `{ vm }` wrapper.
+  Rename-only, no behavior change. All 64 tests across 11 files still pass,
+  typecheck and build are clean.

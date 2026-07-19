@@ -1,9 +1,9 @@
 import NotFoundPage from '@/features/not-found/NotFoundPage'
 import { FolderView } from '@/features/folder/FolderView'
-import { useFolderViewModel } from '@/features/folder/use-folder-vm'
+import { useFolderPage } from '@/features/folder/use-folder-page'
 
 export default function FolderPage() {
-  const vm = useFolderViewModel()
-  if (vm.notFound) return <NotFoundPage />
-  return <FolderView vm={vm} />
+  const props = useFolderPage()
+  if (props.notFound) return <NotFoundPage />
+  return <FolderView {...props} />
 }

@@ -1,6 +1,6 @@
 import type { FileNode } from '@/core/types'
 
-export interface FileViewerViewModel {
+export interface FileViewerViewProps {
   notFound: boolean
   isLoading: boolean
   file: FileNode | null

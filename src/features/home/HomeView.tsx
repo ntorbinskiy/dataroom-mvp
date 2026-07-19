@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { formatCount } from '@/core/format'
 import type { Dataroom } from '@/core/types'
-import type { HomeViewModel } from '@/features/home/home.port'
+import type { HomeViewProps } from '@/features/home/home.port'
 
 function RoomCard({
   room,
@@ -56,42 +56,49 @@ function RoomCard({
   )
 }
 
-export function HomeView({ vm }: { vm: HomeViewModel }) {
+export function HomeView({
+  rooms,
+  roomMeta,
+  isLoading,
+  isError,
+  retry,
+  create,
+  rename,
+  remove,
+}: HomeViewProps) {
   return (
     <div className="min-h-dvh">
       <TopBar />
       <main className="mx-auto max-w-5xl px-6 py-6">
         <h1 className="font-display text-2xl font-semibold">Data rooms</h1>
         <p className="mt-1 font-mono text-xs text-muted-foreground">
-          {vm.rooms !== undefined ? formatCount(vm.rooms.length, 'room') : 'Loading…'}
+          {rooms !== undefined ? formatCount(rooms.length, 'room') : 'Loading…'}
         </p>
         <div className="mt-5">
-          {vm.isLoading ? <TableSkeleton rows={3} /> : null}
-          {vm.isError ? (
-            <ErrorState message="Could not load your data rooms." onRetry={vm.retry} />
-          ) : null}
-          {vm.rooms !== undefined && vm.rooms.length === 0 ? (
+          {isLoading ? <TableSkeleton rows={3} /> : null}
+          {isError ? <ErrorState message="Could not load your data rooms." onRetry={retry} /> : null}
+          {rooms !== undefined && rooms.length === 0 ? (
             <EmptyState
               stamp="No rooms on file"
               description="Create your first data room to start collecting due diligence documents."
             >
-              <Button onClick={() => vm.create.setOpen(true)}>New data room</Button>
+              <Button onClick={() => create.setOpen(true)}>New data room</Button>
             </EmptyState>
           ) : null}
-          {vm.rooms !== undefined && vm.rooms.length > 0 ? (
+          {rooms !== undefined && rooms.length > 0 ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
-              {vm.rooms.map((room) => (
+              {rooms.map((room) => (
                 <RoomCard
                   key={room.id}
                   room={room}
-                  meta={vm.roomMeta.get(room.id) ?? '…'}
-                  onRename={() => vm.rename.show(room)}
-                  onDelete={() => vm.remove.show(room)}
+                  meta={roomMeta.get(room.id) ?? '…'}
+                  onRename={() => rename.show(room)}
+                  onDelete={() => remove.show(room)}
                 />
               ))}
               <button
                 type="button"
-                onClick={() => vm.create.setOpen(true)}
+                onClick={() => create.setOpen(true)}
                 className="mt-3.5 flex min-h-[86px] items-center justify-center gap-2 rounded-lg border border-dashed text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 <Plus className="h-4 w-4" /> New data room
@@ -102,34 +109,34 @@ export function HomeView({ vm }: { vm: HomeViewModel }) {
       </main>
 
       <NameDialog
-        open={vm.create.open}
-        onOpenChange={vm.create.setOpen}
+        open={create.open}
+        onOpenChange={create.setOpen}
         title="New data room"
         confirmLabel="Create"
-        pending={vm.create.pending}
-        onSubmit={vm.create.submit}
+        pending={create.pending}
+        onSubmit={create.submit}
       />
       <NameDialog
-        open={vm.rename.target !== null}
+        open={rename.target !== null}
         onOpenChange={(open) => {
-          if (!open) vm.rename.close()
+          if (!open) rename.close()
         }}
         title="Rename data room"
         confirmLabel="Rename"
-        initialName={vm.rename.target?.name ?? ''}
-        conflictError={vm.rename.conflict}
-        pending={vm.rename.pending}
-        onSubmit={vm.rename.submit}
+        initialName={rename.target?.name ?? ''}
+        conflictError={rename.conflict}
+        pending={rename.pending}
+        onSubmit={rename.submit}
       />
       <DeleteConfirmDialog
-        open={vm.remove.target !== null}
+        open={remove.target !== null}
         onOpenChange={(open) => {
-          if (!open) vm.remove.close()
+          if (!open) remove.close()
         }}
-        itemName={vm.remove.target?.name ?? ''}
-        description={vm.remove.description}
-        pending={vm.remove.pending}
-        onConfirm={vm.remove.confirm}
+        itemName={remove.target?.name ?? ''}
+        description={remove.description}
+        pending={remove.pending}
+        onConfirm={remove.confirm}
       />
     </div>
   )
