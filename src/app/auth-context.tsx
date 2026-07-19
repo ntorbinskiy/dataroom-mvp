@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export type AuthStatus = 'loading' | 'signedOut' | 'signedIn' | 'local'
@@ -46,6 +46,7 @@ export function SupabaseAuthProvider({
 }) {
   const [status, setStatus] = useState<AuthStatus>('loading')
   const [user, setUser] = useState<AuthUser | null>(null)
+  const lastUserId = useRef<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -57,12 +58,15 @@ export function SupabaseAuthProvider({
 
     void client.auth.getSession().then(({ data }) => {
       if (cancelled) return
+      lastUserId.current = data.session?.user.id ?? null
       apply(data.session?.user.email, data.session !== null)
     })
 
     const { data: subscription } = client.auth.onAuthStateChange((_event, session) => {
       apply(session?.user.email, session !== null)
-      onUserChange()
+      const nextUserId = session?.user.id ?? null
+      if (nextUserId !== lastUserId.current) onUserChange()
+      lastUserId.current = nextUserId
     })
 
     return () => {

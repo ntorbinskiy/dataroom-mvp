@@ -79,6 +79,7 @@ export function createSupabaseRepository(client: SupabaseClient): DataroomReposi
   }
 
   async function roomNodes(dataroomId: string): Promise<DataroomNode[]> {
+    if (!isUuid(dataroomId)) return []
     const { data, error } = await client.from('nodes').select('*').eq('dataroom_id', dataroomId)
     if (error !== null) fail('nodes.select', error.message)
     const rows: NodeRow[] = data ?? []
@@ -161,6 +162,7 @@ export function createSupabaseRepository(client: SupabaseClient): DataroomReposi
     },
 
     async renameDataroom(id, name) {
+      if (!isUuid(id)) fail('datarooms.rename', 'Data room not found')
       const existing = await this.listDatarooms()
       const siblings = existing.filter((r) => r.id !== id).map((r) => r.name)
       if (isNameTaken(name, siblings)) throw new NameConflictError()
@@ -176,6 +178,7 @@ export function createSupabaseRepository(client: SupabaseClient): DataroomReposi
     },
 
     async deleteDataroom(id) {
+      if (!isUuid(id)) return
       const nodes = await roomNodes(id)
       await removeBlobs(nodes)
       const { error } = await client.from('datarooms').delete().eq('id', id)
@@ -299,7 +302,10 @@ export function createSupabaseRepository(client: SupabaseClient): DataroomReposi
     async getFileBlob(blobKey) {
       const uid = await ownerId()
       const { data, error } = await client.storage.from('pdfs').download(`${uid}/${blobKey}`)
-      if (error !== null) return null
+      if (error !== null) {
+        if (error.message.toLowerCase().includes('not found')) return null
+        fail('storage.download', error.message)
+      }
       return data
     },
 
