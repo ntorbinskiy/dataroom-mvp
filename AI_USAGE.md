@@ -145,4 +145,8 @@ driving the running app.
   button per action per screen (empty states teach drag-and-drop instead of
   duplicating toolbar buttons), and the viewer header wraps cleanly below
   ~360px.
-- Task 15 - Deploy: pending; will be logged when it runs.
+- Task 15 - Publish and deploy. Git history was reviewed before publishing,
+  the repo was pushed to GitHub via the gh CLI, and the Vercel deployment
+  (SPA rewrites from vercel.json) was set up by hand through the Vercel
+  dashboard. The live URL was then added to the README and the production
+  build smoke-tested in a browser.

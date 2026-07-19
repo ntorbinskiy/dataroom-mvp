@@ -4,7 +4,7 @@ Google Drive-style data room for due diligence documents: multiple data rooms,
 nested folders, PDF upload/preview/rename/delete. Everything runs in the browser;
 documents persist in IndexedDB.
 
-Live: <VERCEL-URL-AFTER-TASK-15>
+Live: https://dataroom-mvp-three.vercel.app
 
 ## Setup
 
