@@ -45,12 +45,27 @@ describe('LoginPage', () => {
     expect(auth.signUp).toHaveBeenCalledWith('new@b.co', 'secret123')
   })
 
-  it('shows the error message returned by signIn', async () => {
+  it('explains invalid credentials in human terms and offers sign up', async () => {
     const auth = stubAuth({ signIn: vi.fn().mockResolvedValue('Invalid login credentials') })
     renderLogin(auth)
     await userEvent.type(screen.getByLabelText('Email'), 'a@b.co')
     await userEvent.type(screen.getByLabelText('Password'), 'wrong')
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
-    expect(await screen.findByText('Invalid login credentials')).toBeInTheDocument()
+    expect(
+      await screen.findByText(
+        'Wrong email or password. If you are new here, you need an account first.',
+      ),
+    ).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Create an account instead' }))
+    expect(screen.getByRole('button', { name: 'Create account' })).toBeInTheDocument()
+  })
+
+  it('passes unknown auth errors through unchanged', async () => {
+    const auth = stubAuth({ signIn: vi.fn().mockResolvedValue('Email rate limit exceeded') })
+    renderLogin(auth)
+    await userEvent.type(screen.getByLabelText('Email'), 'a@b.co')
+    await userEvent.type(screen.getByLabelText('Password'), 'secret123')
+    await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
+    expect(await screen.findByText('Email rate limit exceeded')).toBeInTheDocument()
   })
 })

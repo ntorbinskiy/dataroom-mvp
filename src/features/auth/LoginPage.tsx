@@ -4,13 +4,46 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+type Mode = 'signIn' | 'signUp'
+
+interface AuthError {
+  message: string
+  /** show an inline shortcut to the other mode next to the error */
+  offerSwitch: boolean
+}
+
+// Supabase intentionally reports "no such account" and "wrong password" with
+// one message (no account enumeration). Keep that property, but explain both
+// causes and point to the fix instead of echoing raw API text.
+function humanizeAuthError(raw: string, mode: Mode): AuthError {
+  const lower = raw.toLowerCase()
+  if (mode === 'signIn' && lower.includes('invalid login credentials')) {
+    return {
+      message: 'Wrong email or password. If you are new here, you need an account first.',
+      offerSwitch: true,
+    }
+  }
+  if (mode === 'signUp' && lower.includes('already registered')) {
+    return {
+      message: 'This email already has an account.',
+      offerSwitch: true,
+    }
+  }
+  return { message: raw, offerSwitch: false }
+}
+
 export function LoginPage() {
   const auth = useAuth()
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn')
+  const [mode, setMode] = useState<Mode>('signIn')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<AuthError | null>(null)
   const [pending, setPending] = useState(false)
+
+  function switchMode(next: Mode): void {
+    setMode(next)
+    setError(null)
+  }
 
   async function submit(event: React.SubmitEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
@@ -19,7 +52,7 @@ export function LoginPage() {
     const run = mode === 'signIn' ? auth.signIn : auth.signUp
     const message = await run(email, password)
     setPending(false)
-    if (message !== null) setError(message)
+    if (message !== null) setError(humanizeAuthError(message, mode))
   }
 
   return (
@@ -64,7 +97,20 @@ export function LoginPage() {
                 minLength={6}
               />
             </div>
-            {error !== null ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error !== null ? (
+              <div className="space-y-1">
+                <p className="text-sm text-destructive">{error.message}</p>
+                {error.offerSwitch ? (
+                  <button
+                    type="button"
+                    className="text-sm font-medium text-primary hover:underline"
+                    onClick={() => switchMode(mode === 'signIn' ? 'signUp' : 'signIn')}
+                  >
+                    {mode === 'signIn' ? 'Create an account instead' : 'Sign in instead'}
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
             <Button type="submit" className="w-full" disabled={pending}>
               {mode === 'signIn' ? 'Sign in' : 'Create account'}
             </Button>
@@ -76,10 +122,7 @@ export function LoginPage() {
                 <button
                   type="button"
                   className="font-medium text-primary hover:underline"
-                  onClick={() => {
-                    setMode('signUp')
-                    setError(null)
-                  }}
+                  onClick={() => switchMode('signUp')}
                 >
                   Create one
                 </button>
@@ -90,10 +133,7 @@ export function LoginPage() {
                 <button
                   type="button"
                   className="font-medium text-primary hover:underline"
-                  onClick={() => {
-                    setMode('signIn')
-                    setError(null)
-                  }}
+                  onClick={() => switchMode('signIn')}
                 >
                   Sign in
                 </button>
