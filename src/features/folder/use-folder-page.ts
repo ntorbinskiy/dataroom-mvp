@@ -21,9 +21,9 @@ import { formatBytes, formatCount } from '@/core/format'
 import { isFileNode, isFolderNode } from '@/core/types'
 import type { DataroomNode, NodeId } from '@/core/types'
 import { buildCrumbs } from '@/features/folder/crumbs'
-import type { FolderViewProps, SearchResult } from '@/features/folder/folder.port'
+import type { FolderViewPort, SearchResult } from '@/features/folder/folder.port'
 
-export function useFolderPage(): FolderViewProps {
+export function useFolderPage(): FolderViewPort {
   const params = useParams()
   const navigate = useNavigate()
   const repository = useRepository()

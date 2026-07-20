@@ -11,9 +11,9 @@ import {
 import { NameConflictError } from '@/core/repository.port'
 import { formatBytes, formatCount, formatDate } from '@/core/format'
 import type { Dataroom } from '@/core/types'
-import type { HomeViewProps } from '@/features/home/home.port'
+import type { HomeViewPort } from '@/features/home/home.port'
 
-export function useHomePage(): HomeViewProps {
+export function useHomePage(): HomeViewPort {
   const repository = useRepository()
   const rooms = useDatarooms()
   const createRoom = useCreateDataroom()

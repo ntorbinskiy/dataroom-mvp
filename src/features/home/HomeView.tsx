@@ -56,49 +56,40 @@ function RoomCard({
   )
 }
 
-export function HomeView({
-  rooms,
-  roomMeta,
-  isLoading,
-  isError,
-  retry,
-  create,
-  rename,
-  remove,
-}: HomeViewProps) {
+export function HomeView({ page }: HomeViewProps) {
   return (
     <div className="min-h-dvh">
       <TopBar />
       <main className="mx-auto max-w-5xl px-6 py-6">
         <h1 className="font-display text-2xl font-semibold">Data rooms</h1>
         <p className="mt-1 font-mono text-xs text-muted-foreground">
-          {rooms !== undefined ? formatCount(rooms.length, 'room') : 'Loading…'}
+          {page.rooms !== undefined ? formatCount(page.rooms.length, 'room') : 'Loading…'}
         </p>
         <div className="mt-5">
-          {isLoading ? <TableSkeleton rows={3} /> : null}
-          {isError ? <ErrorState message="Could not load your data rooms." onRetry={retry} /> : null}
-          {rooms !== undefined && rooms.length === 0 ? (
+          {page.isLoading ? <TableSkeleton rows={3} /> : null}
+          {page.isError ? <ErrorState message="Could not load your data rooms." onRetry={page.retry} /> : null}
+          {page.rooms !== undefined && page.rooms.length === 0 ? (
             <EmptyState
               stamp="No rooms on file"
               description="Create your first data room to start collecting due diligence documents."
             >
-              <Button onClick={() => create.setOpen(true)}>New data room</Button>
+              <Button onClick={() => page.create.setOpen(true)}>New data room</Button>
             </EmptyState>
           ) : null}
-          {rooms !== undefined && rooms.length > 0 ? (
+          {page.rooms !== undefined && page.rooms.length > 0 ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
-              {rooms.map((room) => (
+              {page.rooms.map((room) => (
                 <RoomCard
                   key={room.id}
                   room={room}
-                  meta={roomMeta.get(room.id) ?? '…'}
-                  onRename={() => rename.show(room)}
-                  onDelete={() => remove.show(room)}
+                  meta={page.roomMeta.get(room.id) ?? '…'}
+                  onRename={() => page.rename.show(room)}
+                  onDelete={() => page.remove.show(room)}
                 />
               ))}
               <button
                 type="button"
-                onClick={() => create.setOpen(true)}
+                onClick={() => page.create.setOpen(true)}
                 className="mt-3.5 flex min-h-[86px] items-center justify-center gap-2 rounded-lg border border-dashed text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 <Plus className="h-4 w-4" /> New data room
@@ -109,34 +100,34 @@ export function HomeView({
       </main>
 
       <NameDialog
-        open={create.open}
-        onOpenChange={create.setOpen}
+        open={page.create.open}
+        onOpenChange={page.create.setOpen}
         title="New data room"
         confirmLabel="Create"
-        pending={create.pending}
-        onSubmit={create.submit}
+        pending={page.create.pending}
+        onSubmit={page.create.submit}
       />
       <NameDialog
-        open={rename.target !== null}
+        open={page.rename.target !== null}
         onOpenChange={(open) => {
-          if (!open) rename.close()
+          if (!open) page.rename.close()
         }}
         title="Rename data room"
         confirmLabel="Rename"
-        initialName={rename.target?.name ?? ''}
-        conflictError={rename.conflict}
-        pending={rename.pending}
-        onSubmit={rename.submit}
+        initialName={page.rename.target?.name ?? ''}
+        conflictError={page.rename.conflict}
+        pending={page.rename.pending}
+        onSubmit={page.rename.submit}
       />
       <DeleteConfirmDialog
-        open={remove.target !== null}
+        open={page.remove.target !== null}
         onOpenChange={(open) => {
-          if (!open) remove.close()
+          if (!open) page.remove.close()
         }}
-        itemName={remove.target?.name ?? ''}
-        description={remove.description}
-        pending={remove.pending}
-        onConfirm={remove.confirm}
+        itemName={page.remove.target?.name ?? ''}
+        description={page.remove.description}
+        pending={page.remove.pending}
+        onConfirm={page.remove.confirm}
       />
     </div>
   )

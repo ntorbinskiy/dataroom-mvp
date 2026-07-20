@@ -22,7 +22,7 @@ export interface FolderSearch {
   open: (node: DataroomNode) => void
 }
 
-export interface FolderViewProps {
+export interface FolderViewPort {
   notFound: boolean
   title: string
   crumbs: Crumb[] | null
@@ -40,4 +40,8 @@ export interface FolderViewProps {
   rename: TargetDialogFlow<DataroomNode> & { isFile: boolean }
   remove: RemoveFlow<DataroomNode>
   search: FolderSearch
+}
+
+export interface FolderViewProps {
+  page: FolderViewPort
 }

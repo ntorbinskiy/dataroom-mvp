@@ -3,7 +3,7 @@ import { FolderView } from '@/features/folder/FolderView'
 import { useFolderPage } from '@/features/folder/use-folder-page'
 
 export default function FolderPage() {
-  const props = useFolderPage()
-  if (props.notFound) return <NotFoundPage />
-  return <FolderView {...props} />
+  const page = useFolderPage()
+  if (page.notFound) return <NotFoundPage />
+  return <FolderView page={page} />
 }

@@ -54,10 +54,11 @@ driving the running app.
 
 ## How it was verified
 
-- 64 tests across 11 files: unit tests (naming, formatting, upload
-  validation), the shared contract suite run against BOTH adapters, and
-  component/view tests (dialogs, stub-props view rendering, table keyboard
-  behavior).
+- 96 tests across 15 files (79 without cloud credentials): unit tests
+  (naming, formatting, upload validation, search), the shared contract suite
+  run against ALL THREE adapters (the Supabase run is live and env-gated),
+  and component/view tests (dialogs, stub-props view rendering, table
+  keyboard behavior, login flows).
 - A full Playwright end-to-end pass against the running app covering every
   spec flow: room/folder CRUD, PDF upload/view/download, duplicate-name
   suffixing, non-PDF and oversize rejection, extension-locked rename,
@@ -182,5 +183,23 @@ driving the running app.
   error; and the auth context now tracks the last-seen user id in a ref and
   only clears the TanStack Query cache when the signed-in user actually
   changes, not on every `TOKEN_REFRESHED` or `INITIAL_SESSION` event. Test
-  count: 17 live contract tests (env-gated) plus 3 login tests, 95 total
+  count: 17 live contract tests (env-gated) plus 4 login tests, 96 total
   when Supabase keys are present in `.env.local`.
+- 2026-07-20 - Sign-in error UX (8dd0a57). The raw Supabase "Invalid login
+  credentials" message confused first-time visitors who simply had no account
+  yet. Kept the anti-enumeration property (one message for both wrong
+  password and missing account) but rephrased it in human terms and added an
+  inline "Create an account instead" shortcut that switches mode preserving
+  the typed email.
+- 2026-07-20 - Folder header layout shift fix (9d72c68). While loading, the
+  folder page rendered no breadcrumb row and an empty title, so the toolbar
+  jumped down ~50px when data arrived. Skeleton placeholders anchored on
+  non-breaking spaces now reserve the exact line-box heights. Verified with a
+  PerformanceObserver: zero layout-shift entries across a cold navigation.
+- 2026-07-20 - Single page prop for feature views. A review of the view
+  signatures found them destructuring 8-14 props each. Decision: any
+  component taking more than 4 props receives one object instead; feature
+  views now take the whole port as a single `page` prop
+  (`<FolderView page={useFolderPage()} />`), while shared primitives
+  (NameDialog, NodeTable) keep flat props to match ecosystem convention.
+  Rename-only change, no behavior difference; all 96 tests stayed green.

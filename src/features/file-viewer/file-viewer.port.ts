@@ -1,6 +1,6 @@
 import type { FileNode } from '@/core/types'
 
-export interface FileViewerViewProps {
+export interface FileViewerViewPort {
   notFound: boolean
   isLoading: boolean
   file: FileNode | null
@@ -23,4 +23,8 @@ export interface FileViewerViewProps {
     setOpen: (open: boolean) => void
     confirm: () => void
   }
+}
+
+export interface FileViewerViewProps {
+  page: FileViewerViewPort
 }
