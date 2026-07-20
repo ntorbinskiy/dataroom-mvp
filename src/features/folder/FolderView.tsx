@@ -12,6 +12,7 @@ import { ErrorState } from '@/components/feedback/ErrorState'
 import { TableSkeleton } from '@/components/feedback/TableSkeleton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { FolderViewProps } from '@/features/folder/folder.port'
 
 export function FolderView({
@@ -35,10 +36,28 @@ export function FolderView({
     <div className="min-h-dvh">
       <TopBar />
       <main className="mx-auto max-w-5xl px-6 py-5">
-        {crumbs !== null ? <Breadcrumbs crumbs={crumbs} /> : null}
+        {/* the non-breaking spaces below keep the real line-box heights while
+            loading, so the toolbar does not shift down once data arrives */}
+        {crumbs !== null ? (
+          <Breadcrumbs crumbs={crumbs} />
+        ) : (
+          <div aria-hidden="true" className="relative text-[13px]">
+            {'\u00A0'}
+            <Skeleton className="absolute top-1/2 left-0 h-3.5 w-40 -translate-y-1/2" />
+          </div>
+        )}
         <div className="mt-1.5 mb-4 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-display text-2xl font-semibold">{title}</h1>
+            <h1 className="relative font-display text-2xl font-semibold">
+              {title !== '' ? (
+                title
+              ) : (
+                <>
+                  {'\u00A0'}
+                  <Skeleton className="absolute top-1/2 left-0 h-6 w-48 -translate-y-1/2" />
+                </>
+              )}
+            </h1>
             <p className="mt-1 font-mono text-xs text-muted-foreground">{summary ?? 'Loading…'}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
